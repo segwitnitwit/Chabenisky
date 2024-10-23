@@ -34,6 +34,24 @@
             z-index: 10;
             border-radius: 5px;
         }
+
+        .twitter-link {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            z-index: 10;
+            font-size: 1.2rem;
+            color: white;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-family: Arial, sans-serif;
+        }
+
+        .twitter-link:hover {
+            background-color: rgba(0, 0, 0, 0.7);
+        }
     </style>
 </head>
 <body>
@@ -45,6 +63,9 @@
         <div id="marketCapText"></div>
         <div id="percentageText"></div>
     </div>
+
+    <!-- Link to Twitter -->
+    <a href="https://x.com/segwitnitwit" class="twitter-link" target="_blank">built by segwitnitwit</a>
 
     <script>
         const canvas = document.getElementById('revealCanvas');
@@ -89,9 +110,9 @@
             ctx.restore();
 
             // Update the overlay text values
-            netWorthText.textContent = `Net Worth: ${MAX_VALUE.toLocaleString()}`;
-            marketCapText.textContent = `Market Cap: ${marketCap.toLocaleString()}`;
-            percentageText.textContent = `Progress: ${(percentage*100).toFixed(4)}%`;
+            netWorthText.textContent = `net worth: ${MAX_VALUE.toLocaleString()}`;
+            marketCapText.textContent = `market cap: ${marketCap.toLocaleString()}`;
+            percentageText.textContent = `progress: ${(percentage*100).toFixed(4)}%`;
         }
 
         // Fetch market cap data and calculate the percentage
