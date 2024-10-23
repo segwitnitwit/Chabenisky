@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market Cap Reveal Animation</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .overlay-text {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: white;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            font-size: 1.2rem;
+            font-family: Arial, sans-serif;
+            z-index: 10;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="revealCanvas"></canvas>
+
+    <!-- Overlay div for displaying text -->
+    <div class="overlay-text" id="overlayText">
+        <div id="netWorthText"></div>
+        <div id="marketCapText"></div>
+        <div id="percentageText"></div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('revealCanvas');
+        const ctx = canvas.getContext('2d');
+
+        const backgroundImg = new Image();
+        const personImg = new Image();
+
+        backgroundImg.src = '/Users/tb/code/personal/randomScripts/memes/background.png';  // Update the path
+        personImg.src = '/Users/tb/code/personal/randomScripts/memes/subject.png';          // Update the path
+
+        // HTML elements for displaying text
+        const netWorthText = document.getElementById('netWorthText');
+        const marketCapText = document.getElementById('marketCapText');
+        const percentageText = document.getElementById('percentageText');
+
+        // Maximum market cap value
+        const MAX_VALUE = 5.7e9;
+
+        // Resize canvas to fit the window
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            draw(0, 0);  // Start with 0% reveal initially
+        }
+
+        // Draw the background and person images based on percentage
+        function draw(percentage, marketCap) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
+
+            const revealHeight = canvas.height * (percentage);
+
+            // Mask for the person image
+            ctx.save();
+            ctx.rect(0, canvas.height - revealHeight, canvas.width, revealHeight);
+            ctx.clip();
+
+            ctx.drawImage(personImg, 0, 0, canvas.width, canvas.height);
+            ctx.restore();
+
+            // Update the overlay text values
+            netWorthText.textContent = `Networth: ${MAX_VALUE.toLocaleString()}`;
+            marketCapText.textContent = `Market Cap: ${marketCap.toLocaleString()}`;
+            percentageText.textContent = `Progress: ${(percentage*100).toFixed(2)}%`;
+        }
+
+        // Fetch market cap data and calculate the percentage
+        async function fetchMarketCap() {
+            try {
+                const response = await fetch(`https://api.dexscreener.com/latest/dex/pairs/solana/8v8ot6krfn89yzys7dd9jp465amhwyysxxfwfinbqkcy?${Date.now()}`);
+                const data = await response.json();
+                const marketCap = data.pairs[0].marketCap;
+
+                console.log("MKT CAP: " + marketCap)
+                console.log("MAX VALUE: " + MAX_VALUE)
+
+                // Calculate the percentage based on the market cap
+                const percentage = (marketCap / MAX_VALUE) * 100;
+
+                console.log("PCT: " + percentage)
+
+                // Ensure the percentage doesn't exceed 100%
+                const boundedPercentage = Math.min(percentage, 100);
+
+                // Draw the reveal based on the percentage
+                draw(boundedPercentage, marketCap);
+            } catch (error) {
+                console.error('Error fetching market cap:', error);
+            }
+        }
+
+        // Load images and start the initial drawing
+        backgroundImg.onload = personImg.onload = () => {
+            resizeCanvas();
+            fetchMarketCap();  // Fetch the market cap immediately
+        };
+
+        window.addEventListener('resize', resizeCanvas);
+
+        // Call the API every second
+        setInterval(fetchMarketCap, 1000);  // Fetch and update the reveal every second
+    </script>
+</body>
+</html>
