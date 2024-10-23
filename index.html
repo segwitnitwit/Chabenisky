@@ -78,6 +78,8 @@
 
             const revealHeight = canvas.height * (percentage);
 
+            console.log('reveal height: ' + revealHeight)
+
             // Mask for the person image
             ctx.save();
             ctx.rect(0, canvas.height - revealHeight, canvas.width, revealHeight);
@@ -87,7 +89,7 @@
             ctx.restore();
 
             // Update the overlay text values
-            netWorthText.textContent = `Networth: ${MAX_VALUE.toLocaleString()}`;
+            netWorthText.textContent = `Net Worth: ${MAX_VALUE.toLocaleString()}`;
             marketCapText.textContent = `Market Cap: ${marketCap.toLocaleString()}`;
             percentageText.textContent = `Progress: ${(percentage*100).toFixed(4)}%`;
         }
