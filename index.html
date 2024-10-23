@@ -89,7 +89,7 @@
             // Update the overlay text values
             netWorthText.textContent = `Networth: ${MAX_VALUE.toLocaleString()}`;
             marketCapText.textContent = `Market Cap: ${marketCap.toLocaleString()}`;
-            percentageText.textContent = `Progress: ${(percentage*100).toFixed(2)}%`;
+            percentageText.textContent = `Progress: ${(percentage*100).toFixed(4)}%`;
         }
 
         // Fetch market cap data and calculate the percentage
@@ -103,7 +103,7 @@
                 console.log("MAX VALUE: " + MAX_VALUE)
 
                 // Calculate the percentage based on the market cap
-                const percentage = (marketCap / MAX_VALUE) * 100;
+                const percentage = (marketCap / MAX_VALUE);
 
                 console.log("PCT: " + percentage)
 
